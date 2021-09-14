@@ -9,18 +9,43 @@ namespace CRUD_Console_Program
     {
         static void Main(string[] args) 
         {
+            Console.WriteLine("Welcome to the CRUD console program :)\n");
+            Console.WriteLine("ID - Forename Surname - (Email)");
+            Console.WriteLine("----------------------------------------------------------\n");
+
 
             string path = @"D:\data.txt"; //setting the path for the data file
-            List<string> lines = File.ReadAllLines(path).ToList();//File.ReadAllLines(path) will return an array, with each index containing a line from the file, we are converting this to a list to make it easier to add items to the list
 
-            foreach (string x in lines) 
+            List<Person> people = new List<Person>();
+            List<string> lines = File.ReadAllLines(path).ToList();//File.ReadAllLines(path)
+
+            foreach (var x in lines) //For every line we do the following:
             {
-                Console.WriteLine(x);
+                
+                string[] entries = x.Split(','); //Split the line into an array by comma (ryan, scott bevcomes [0] = ryan and [1] = scott).
+                Person newPerson = new Person(); //creating a new person
+
+                if (entries.Length == 4)
+                {
+                    newPerson.PersonID = Int32.Parse(entries[0]); //populating the object (instance of the Person class) 
+                    newPerson.Surname = entries[1];
+                    newPerson.Forename = entries[2];
+                    newPerson.Email = entries[3];
+
+                    people.Add(newPerson); //Adding the object to our list.
+                }
+                else
+                {
+                    Console.WriteLine("ERROR reading line: " + x + " in the doccument");
+                }
             }
 
-            lines.Add("004,Scott,Owen,OwenScott@hotmail.org");//Adding an item to the list.
+            foreach (var x in people) 
+            {
+                Console.WriteLine($"{x.PersonID} - {x.Forename} {x.Surname} - ({x.Email})"); //Because we are using the $ before our "", we can use {} to escape from the string and include code
+            }
 
-            File.WriteAllLines(path, lines);//will write the contents of the lines list to the file
+            Console.ReadLine();
 
         }
     }
